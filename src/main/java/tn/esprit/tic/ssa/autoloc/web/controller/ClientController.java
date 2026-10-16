@@ -1,5 +1,9 @@
 package tn.esprit.tic.ssa.autoloc.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tic.ssa.autoloc.domain.Client;
@@ -9,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clients")
+@Tag(name = "Clients")
 public class ClientController {
 
     private final IClientService clientService;
@@ -18,45 +23,49 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> getAll() {
-        return clientService.retrieveAllClients();
+    @Operation(summary = "Recuperer tous les clients")
+    @ApiResponse(responseCode = "200", description = "Liste des clients recuperee")
+    public ResponseEntity<List<Client>> getAll() {
+        return ResponseEntity.ok(clientService.retrieveAllClients());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Recuperer un client par son identifiant")
+    @ApiResponse(responseCode = "200", description = "Client trouve")
+    @ApiResponse(responseCode = "404", description = "Client introuvable")
     public ResponseEntity<Client> getById(@PathVariable Long id) {
-        Client value = clientService.retrieveClient(id);
-        return value == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(value);
+        Client client = clientService.retrieveClient(id);
+        return client == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(client);
     }
 
     @PostMapping
-    public Client add(@RequestBody Client client) {
-        return clientService.addClient(client);
-    }
-
-    @PostMapping("/batch")
-    public List<Client> addAll(@RequestBody List<Client> clients) {
-        return clientService.addClients(clients);
+    @Operation(summary = "Ajouter un client")
+    @ApiResponse(responseCode = "201", description = "Client cree")
+    public ResponseEntity<Client> add(@RequestBody Client client) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.addClient(client));
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Modifier un client")
+    @ApiResponse(responseCode = "200", description = "Client modifie")
+    @ApiResponse(responseCode = "404", description = "Client introuvable")
     public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client client) {
         if (clientService.retrieveClient(id) == null) {
             return ResponseEntity.notFound().build();
         }
-        setId(client, id);
+        client.setIdClient(id);
         return ResponseEntity.ok(clientService.updateClient(client));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Supprimer un client")
+    @ApiResponse(responseCode = "204", description = "Client supprime")
+    @ApiResponse(responseCode = "404", description = "Client introuvable")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (clientService.retrieveClient(id) == null) {
             return ResponseEntity.notFound().build();
         }
         clientService.removeClient(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private void setId(Client client, Long id) {
-        client.setIdClient(id);
     }
 }

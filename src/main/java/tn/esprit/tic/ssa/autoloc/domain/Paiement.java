@@ -1,5 +1,6 @@
 package tn.esprit.tic.ssa.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +31,7 @@ public class Paiement {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private ModePaiement modePaiement;
-
-    // Plusieurs paiements appartiennent à un seul contrat.
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "contrat_id", nullable = false)
     private Contrat contrat;

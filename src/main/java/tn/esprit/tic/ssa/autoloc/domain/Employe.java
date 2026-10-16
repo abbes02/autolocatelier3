@@ -1,5 +1,6 @@
 package tn.esprit.tic.ssa.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +28,7 @@ public class Employe {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RoleEmploye role;
-
-    // Plusieurs employés travaillent dans une seule agence.
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agence_id", nullable = false)
     private Agence agence;

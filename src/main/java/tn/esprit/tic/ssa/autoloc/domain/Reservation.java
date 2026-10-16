@@ -1,5 +1,6 @@
 package tn.esprit.tic.ssa.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,18 +30,15 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutReservation statut;
-
-    // Plusieurs réservations peuvent concerner le même véhicule.
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "vehicule_id", nullable = false)
     private Vehicule vehicule;
-
-    // Plusieurs réservations peuvent être effectuées par un même client.
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-
-    // Une réservation est liée à un seul contrat.
+    @JsonIgnore
     @OneToOne(mappedBy = "reservation")
     private Contrat contrat;
 }

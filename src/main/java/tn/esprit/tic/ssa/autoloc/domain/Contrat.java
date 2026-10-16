@@ -1,5 +1,6 @@
 package tn.esprit.tic.ssa.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,13 +32,11 @@ public class Contrat {
 
     @Column(nullable = false)
     private boolean valide;
-
-    // Relation un-à-un avec Reservation.
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "reservation_id", nullable = false, unique = true)
     private Reservation reservation;
-
-    // Composition du diagramme : un contrat contient plusieurs paiements.
+    @JsonIgnore
     @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Paiement> paiements = new ArrayList<>();
 }

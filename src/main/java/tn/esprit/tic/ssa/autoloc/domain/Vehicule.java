@@ -1,5 +1,6 @@
 package tn.esprit.tic.ssa.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,17 +44,13 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutVehicule statut;
-
-    // Plusieurs véhicules appartiennent à une agence.
     @ManyToOne
     @JoinColumn(name = "agence_id", nullable = false)
     private Agence agence;
-
-    // Un véhicule peut avoir plusieurs opérations de maintenance.
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicule")
     private List<Maintenance> maintenances = new ArrayList<>();
-
-    // Un véhicule peut être lié à plusieurs équipements et inversement.
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "vehicule_equipement",
@@ -61,8 +58,7 @@ public class Vehicule {
             inverseJoinColumns = @JoinColumn(name = "equipement_id")
     )
     private Set<Equipement> equipements = new HashSet<>();
-
-    // Un véhicule peut apparaître dans plusieurs réservations.
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicule")
     private List<Reservation> reservations = new ArrayList<>();
 }
