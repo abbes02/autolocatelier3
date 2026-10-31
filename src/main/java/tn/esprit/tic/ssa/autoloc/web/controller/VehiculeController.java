@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tic.ssa.autoloc.domain.Vehicule;
+import tn.esprit.tic.ssa.autoloc.dto.VehiculeDTO;
 import tn.esprit.tic.ssa.autoloc.service.IVehiculeService;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class VehiculeController {
     @GetMapping
     @Operation(summary = "Recuperer tous les vehicules")
     @ApiResponse(responseCode = "200", description = "Liste des vehicules recuperee")
-    public ResponseEntity<List<Vehicule>> getAll() {
+    public ResponseEntity<List<VehiculeDTO>> getAll() {
         return ResponseEntity.ok(vehiculeService.retrieveAllVehicules());
     }
 
@@ -33,15 +34,15 @@ public class VehiculeController {
     @Operation(summary = "Recuperer un vehicule par son identifiant")
     @ApiResponse(responseCode = "200", description = "Vehicule trouve")
     @ApiResponse(responseCode = "404", description = "Vehicule introuvable")
-    public ResponseEntity<Vehicule> getById(@PathVariable Long id) {
-        Vehicule vehicule = vehiculeService.retrieveVehicule(id);
+    public ResponseEntity<VehiculeDTO> getById(@PathVariable Long id) {
+        VehiculeDTO vehicule = vehiculeService.retrieveVehicule(id);
         return vehicule == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(vehicule);
     }
 
     @PostMapping
     @Operation(summary = "Ajouter un vehicule")
     @ApiResponse(responseCode = "201", description = "Vehicule cree")
-    public ResponseEntity<Vehicule> add(@RequestBody Vehicule vehicule) {
+    public ResponseEntity<VehiculeDTO> add(@RequestBody Vehicule vehicule) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vehiculeService.addVehicule(vehicule));
     }
 
@@ -49,7 +50,7 @@ public class VehiculeController {
     @Operation(summary = "Modifier un vehicule")
     @ApiResponse(responseCode = "200", description = "Vehicule modifie")
     @ApiResponse(responseCode = "404", description = "Vehicule introuvable")
-    public ResponseEntity<Vehicule> update(@PathVariable Long id, @RequestBody Vehicule vehicule) {
+    public ResponseEntity<VehiculeDTO> update(@PathVariable Long id, @RequestBody Vehicule vehicule) {
         if (vehiculeService.retrieveVehicule(id) == null) {
             return ResponseEntity.notFound().build();
         }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tic.ssa.autoloc.domain.Client;
+import tn.esprit.tic.ssa.autoloc.dto.ClientDTO;
 import tn.esprit.tic.ssa.autoloc.service.IClientService;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ClientController {
     @GetMapping
     @Operation(summary = "Recuperer tous les clients")
     @ApiResponse(responseCode = "200", description = "Liste des clients recuperee")
-    public ResponseEntity<List<Client>> getAll() {
+    public ResponseEntity<List<ClientDTO>> getAll() {
         return ResponseEntity.ok(clientService.retrieveAllClients());
     }
 
@@ -33,15 +34,15 @@ public class ClientController {
     @Operation(summary = "Recuperer un client par son identifiant")
     @ApiResponse(responseCode = "200", description = "Client trouve")
     @ApiResponse(responseCode = "404", description = "Client introuvable")
-    public ResponseEntity<Client> getById(@PathVariable Long id) {
-        Client client = clientService.retrieveClient(id);
+    public ResponseEntity<ClientDTO> getById(@PathVariable Long id) {
+        ClientDTO client = clientService.retrieveClient(id);
         return client == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(client);
     }
 
     @PostMapping
     @Operation(summary = "Ajouter un client")
     @ApiResponse(responseCode = "201", description = "Client cree")
-    public ResponseEntity<Client> add(@RequestBody Client client) {
+    public ResponseEntity<ClientDTO> add(@RequestBody Client client) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.addClient(client));
     }
 
@@ -49,7 +50,7 @@ public class ClientController {
     @Operation(summary = "Modifier un client")
     @ApiResponse(responseCode = "200", description = "Client modifie")
     @ApiResponse(responseCode = "404", description = "Client introuvable")
-    public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client client) {
+    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody Client client) {
         if (clientService.retrieveClient(id) == null) {
             return ResponseEntity.notFound().build();
         }
